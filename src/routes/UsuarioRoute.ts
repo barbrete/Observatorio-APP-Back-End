@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { UsuarioController } from '../controllers/usuario.controller';
+import { registrar, listar, buscarPorId, atualizar, remover } from '../controllers/UsuarioController';
 
 const router = Router();
-const usuarioController = new UsuarioController();
 
-router.post('/', usuarioController.registrar.bind(usuarioController));
-router.get('/', usuarioController.listar.bind(usuarioController));
-router.get('/:id', usuarioController.buscarPorId.bind(usuarioController));
-router.put('/:id', usuarioController.atualizar.bind(usuarioController));
-router.delete('/:id', usuarioController.remover.bind(usuarioController));
+router.post('/', registrar);
+router.get('/', listar);
+router.get('/:id', buscarPorId);
+router.put('/:id', atualizar);
+router.delete('/:id', remover);
 
 export default router;

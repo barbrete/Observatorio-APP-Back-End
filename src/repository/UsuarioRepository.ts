@@ -1,29 +1,29 @@
-import { PrismaClient, Usuario } from '@prisma/client';
+import prisma from '../../prisma/prismaClient';
+import { Usuario } from '../../generated/prisma';
 
-const prisma = new PrismaClient();
+export const criar = async (dados: { nome: string; email: string; senha: string }): Promise<Usuario> => {
+  return await prisma.usuario.create({ data: dados });
+};
 
-export class UsuarioRepository {
-  async criar(dados: { nome: string; email: string; senha: string }): Promise<Usuario> {
-    return await prisma.usuario.create({ data: dados });
-  }
+export const buscarPorId = async (id: number): Promise<Usuario | null> => {
+  return await prisma.usuario.findUnique({ where: { id } });
+};
 
-  async buscarPorId(id: number): Promise<Usuario | null> {
-    return await prisma.usuario.findUnique({ where: { id } });
-  }
+export const buscarPorEmail = async (email: string): Promise<Usuario | null> => {
+  return await prisma.usuario.findUnique({ where: { email } });
+};
 
-  async buscarPorEmail(email: string): Promise<Usuario | null> {
-    return await prisma.usuario.findUnique({ where: { email } });
-  }
+export const atualizar = async (
+  id: number,
+  dados: Partial<{ nome: string; email: string; senha: string }>
+): Promise<Usuario> => {
+  return await prisma.usuario.update({ where: { id }, data: dados });
+};
 
-  async atualizar(id: number, dados: Partial<{ nome: string; email: string; senha: string }>): Promise<Usuario> {
-    return await prisma.usuario.update({ where: { id }, data: dados });
-  }
+export const remover = async (id: number): Promise<Usuario> => {
+  return await prisma.usuario.delete({ where: { id } });
+};
 
-  async remover(id: number): Promise<Usuario> {
-    return await prisma.usuario.delete({ where: { id } });
-  }
-
-  async listarTodos(): Promise<Usuario[]> {
-    return await prisma.usuario.findMany();
-  }
-}
+export const listarTodos = async (): Promise<Usuario[]> => {
+  return await prisma.usuario.findMany();
+};

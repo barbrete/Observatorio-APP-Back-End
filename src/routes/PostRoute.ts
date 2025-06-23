@@ -1,14 +1,12 @@
-//// filepath: src/routes/post.routes.ts
 import { Router } from 'express';
-import { PostController } from '../controllers/post.controller';
+import { criar, listar, buscarPorId, atualizar, remover } from '../controllers/PostController';
 
 const router = Router();
-const postController = new PostController();
 
-router.post('/', postController.criar.bind(postController));
-router.get('/', postController.listar.bind(postController));
-router.get('/:id', postController.buscarPorId.bind(postController));
-router.put('/:id', postController.atualizar.bind(postController));
-router.delete('/:id', postController.remover.bind(postController));
+router.post('/', criar);
+router.get('/', listar);
+router.get('/:id', buscarPorId);
+router.put('/:id', atualizar);
+router.delete('/:id', remover);
 
 export default router;

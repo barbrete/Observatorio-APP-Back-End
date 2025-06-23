@@ -1,32 +1,30 @@
-//// filepath: src/services/comentario.service.ts
-import { ComentarioRepository } from '../repository/comentario.repository';
+import * as comentarioRepository from '../repository/ComentarioRepository';
 
-export class ComentarioService {
-  private comentarioRepository = new ComentarioRepository();
+export const criarComentario = async (dados: { conteudo: string; postId: number; usuarioId: number }) => {
+  return await comentarioRepository.criar(dados);
+};
 
-  async criarComentario(dados: { conteudo: string; postId: number; usuarioId: number }) {
-    return await this.comentarioRepository.criar(dados);
-  }
+export const obterComentarioPorId = async (id: number) => {
+  const comentario = await comentarioRepository.buscarPorId(id);
+  if (!comentario) throw new Error('Comentário não encontrado');
+  return comentario;
+};
 
-  async obterComentarioPorId(id: number) {
-    const comentario = await this.comentarioRepository.buscarPorId(id);
-    if (!comentario) throw new Error('Comentário não encontrado');
-    return comentario;
-  }
+export const atualizarComentario = async (
+  id: number,
+  dados: Partial<{ conteudo: string }>
+) => {
+  return await comentarioRepository.atualizar(id, dados);
+};
 
-  async atualizarComentario(id: number, dados: Partial<{ conteudo: string }>) {
-    return await this.comentarioRepository.atualizar(id, dados);
-  }
+export const removerComentario = async (id: number) => {
+  return await comentarioRepository.remover(id);
+};
 
-  async removerComentario(id: number) {
-    return await this.comentarioRepository.remover(id);
-  }
+export const listarComentarios = async () => {
+  return await comentarioRepository.listarTodos();
+};
 
-  async listarComentarios() {
-    return await this.comentarioRepository.listarTodos();
-  }
-
-  async listarComentariosPorPost(postId: number) {
-    return await this.comentarioRepository.listarPorPost(postId);
-  }
-}
+export const listarComentariosPorPost = async (postId: number) => {
+  return await comentarioRepository.listarPorPost(postId);
+};
