@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id            Int                 @id @default(autoincrement())
+  nome          String
+  email         String              @unique
+  senha         String
+  posts         Post[]
+  comentarios   Comentario[]
+  curtidasPost  CurtidaPost[]
+  curtidasComentario CurtidaComentario[]
+  criadoEm      DateTime            @default(now())
+  atualizadoEm  DateTime            @updatedAt
+}
+
+model Post {
+  id            Int               @id @default(autoincrement())
+  conteudo      String
+  usuarioId     Int
+  usuario       Usuario           @relation(fields: [usuarioId], references: [id])
+  comentarios   Comentario[]
+  curtidas      CurtidaPost[]
+  criadoEm      DateTime          @default(now())
+  atualizadoEm  DateTime          @updatedAt
+}
+
+model Comentario {
+  id             Int                  @id @default(autoincrement())
+  conteudo       String
+  postId         Int
+  usuarioId      Int
+  post           Post                 @relation(fields: [postId], references: [id])
+  usuario        Usuario              @relation(fields: [usuarioId], references: [id])
+  curtidas       CurtidaComentario[]
+  criadoEm       DateTime             @default(now())
+  atualizadoEm   DateTime             @updatedAt
+}
+
+model CurtidaPost {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int
+  postId      Int
+
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+  post        Post      @relation(fields: [postId], references: [id])
+
+  criadoEm    DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@unique([usuarioId, postId])
+}
+
+model CurtidaComentario {
+  id           Int       @id @default(autoincrement())
+  usuarioId    Int
+  comentarioId Int
+
+  usuario      Usuario   @relation(fields: [usuarioId], references: [id])
+  comentario   Comentario @relation(fields: [comentarioId], references: [id])
+
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  @@unique([usuarioId, comentarioId])
+}
